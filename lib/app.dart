@@ -1,4 +1,4 @@
-import 'package:ceylon_home_kitchen_mobile_app/screens/splash_screen.dart';
+import 'package:food_mess_mobile_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 // Assuming these are defined in your constants.dart,

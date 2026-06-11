@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ceylon_home_kitchen_mobile_app/widgets/sub_service_card.dart';
+import 'package:food_mess_mobile_app/widgets/sub_service_card.dart';
 
 import '../db/constants.dart';
 import '../models/service_model.dart'; // <-- import your models

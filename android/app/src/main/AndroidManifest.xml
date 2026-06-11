@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="ceylon_home_kitchen_mobile_app"
+        android:label="food_mess_mobile_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

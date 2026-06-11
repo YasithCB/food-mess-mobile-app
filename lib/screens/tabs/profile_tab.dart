@@ -7,7 +7,6 @@ import '../../util/snackbar_util.dart';
 import '../../util/storage_util.dart';
 import '../../util/util.dart';
 import '../auth/login_screen.dart';
-import '../profile/edit_profile.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
@@ -25,7 +24,7 @@ class _ProfileTabState extends State<ProfileTab> {
 
       await StorageUtil.clear();
       // clear local var
-      currentUser = {};
+      currentUser = null;
 
       print("🚪 Logged out");
       SnackBarUtil.show(context, "Logged out");
@@ -73,18 +72,17 @@ class _ProfileTabState extends State<ProfileTab> {
                       ),
                       SizedBox(height: 12),
                       Text(
-                        currentUser['username'] ??
-                            'Hello Guest!',
+                        "Hello, ${currentUser != null ? currentUser!.name : 'Guest'}",
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
-                        currentUser['email'] ??
-                            'Login now to get best experience',
-                        style: TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
+                      // Text(
+                      //   currentUser['email'] ??
+                      //       'Login now to get best experience',
+                      //   style: TextStyle(fontSize: 14, color: Colors.grey),
+                      // ),
                     ],
                   ),
                 ],
@@ -97,27 +95,6 @@ class _ProfileTabState extends State<ProfileTab> {
               // 📋 Options
               Column(
                 children: [
-                  if (currentUser.isNotEmpty)
-                    ListTile(
-                      onTap: () => {
-                        // NavigationUtil.push(context, EditProfileScreen()),
-                      },
-                      leading: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: primaryColor5,
-                        ),
-                        child: Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                      title: Text('Edit Profile'),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                    ),
-
                   ListTile(
                     onTap: openCall,
                     leading: Container(
@@ -159,33 +136,36 @@ class _ProfileTabState extends State<ProfileTab> {
               // 🚪 Logout button
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-
-                  foregroundColor: primaryColor,
+                  backgroundColor:  primaryColor,
+                  foregroundColor: backgroundColor, // 🔹 Fixed: Foreground should contrast with background
                   minimumSize: const Size.fromHeight(50), // full width
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
+                // 🔹 If user is logged in, show logout icon; otherwise show login icon
                 icon: Icon(
-                  currentUser.isEmpty
-                      ? Icons.login_outlined
-                      : Icons.logout_rounded,
+                  currentUser != null ? Icons.logout_rounded : Icons.login_outlined,
                   color: backgroundColor,
                 ),
+                // 🔹 If user is logged in, show 'Logout'; otherwise show 'Login Now'
                 label: Text(
-                  currentUser.isEmpty
-                      ? 'Login Now'
-                      : 'Logout',
+                  currentUser != null ? 'Logout' : 'Login Now',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: backgroundColor,
                   ),
                 ),
-                onPressed: () =>
-                    currentUser.isEmpty ? handleLogin() : handleLogout(context),
-              ),
+                // 🔹 Execute the correct function depending on session state
+                onPressed: () {
+                  if (currentUser != null) {
+                    handleLogout(context);
+                  } else {
+                    handleLogin(); // If this requires a context, pass it like handleLogin(context)
+                  }
+                },
+              )
             ],
           ),
         ),

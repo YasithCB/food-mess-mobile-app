@@ -1,8 +1,8 @@
-import 'package:ceylon_home_kitchen_mobile_app/screens/tabs/about_us_screen.dart';
-import 'package:ceylon_home_kitchen_mobile_app/screens/tabs/history_screen.dart';
-import 'package:ceylon_home_kitchen_mobile_app/screens/tabs/home_tab.dart';
-import 'package:ceylon_home_kitchen_mobile_app/screens/tabs/payment_screen.dart';
-import 'package:ceylon_home_kitchen_mobile_app/screens/tabs/profile_tab.dart';
+import 'package:food_mess_mobile_app/screens/tabs/about_us_screen.dart';
+import 'package:food_mess_mobile_app/screens/tabs/history_screen.dart';
+import 'package:food_mess_mobile_app/screens/tabs/home_tab.dart';
+import 'package:food_mess_mobile_app/screens/tabs/payment_screen.dart';
+import 'package:food_mess_mobile_app/screens/tabs/profile_tab.dart';
 import 'package:flutter/material.dart';
 
 import '../db/constants.dart';

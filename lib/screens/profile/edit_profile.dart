@@ -1,8 +1,8 @@
 // import 'package:flutter/material.dart';
-// import 'package:ceylon_home_kitchen_mobile_app/api/auth_api.dart';
-// import 'package:ceylon_home_kitchen_mobile_app/screens/home_screen.dart';
-// import 'package:ceylon_home_kitchen_mobile_app/util/snackbar_util.dart';
-// import 'package:ceylon_home_kitchen_mobile_app/util/storage_util.dart';
+// import 'package:food_mess_mobile_app/api/auth_api.dart';
+// import 'package:food_mess_mobile_app/screens/home_screen.dart';
+// import 'package:food_mess_mobile_app/util/snackbar_util.dart';
+// import 'package:food_mess_mobile_app/util/storage_util.dart';
 //
 // import '../../db/constants.dart';
 // import '../../util/navigation_util.dart';

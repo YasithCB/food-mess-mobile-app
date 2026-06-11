@@ -1,12 +1,16 @@
-import 'package:ceylon_home_kitchen_mobile_app/db/constants.dart';
-import 'package:ceylon_home_kitchen_mobile_app/models/menuItem_model.dart';
+import 'package:food_mess_mobile_app/db/constants.dart';
+import 'package:food_mess_mobile_app/models/meal1_model.dart';
+import 'package:food_mess_mobile_app/models/menuItem_model.dart';
 import 'package:flutter/material.dart';
+import 'package:food_mess_mobile_app/util/currency_util.dart';
+
+import '../util/util.dart';
 
 
 class MenuCard extends StatelessWidget {
-  final MenuItem menuItem;
+  final MealModel1 meal;
 
-  const MenuCard({super.key, required this.menuItem});
+  const MenuCard({super.key, required this.meal});
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +34,15 @@ class MenuCard extends StatelessWidget {
             // 🔹 Left Image
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                menuItem.img,
+              child: Image.network(
+                formatUrl(baseUrl, meal.imageUrl.toString()),
                 width: 85,
                 height: 85,
                 fit: BoxFit.cover,
               ),
             ),
             const SizedBox(width: 12),
+
             // 🔹 Right Texts
             Expanded(
               child: Column(
@@ -47,14 +52,14 @@ class MenuCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        menuItem.name,
+                        meal.name,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       Text(
-                        menuItem.price,
+                        CurrencyUtil.formatCurrency(meal.price),
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -65,7 +70,7 @@ class MenuCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    menuItem.desc,
+                    meal.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 13, color: Colors.white54),

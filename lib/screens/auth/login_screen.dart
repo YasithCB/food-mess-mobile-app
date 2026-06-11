@@ -1,11 +1,13 @@
-import 'package:ceylon_home_kitchen_mobile_app/util/storage_util.dart';
+import 'package:food_mess_mobile_app/screens/admin/admin_home_screen.dart';
+import 'package:food_mess_mobile_app/util/storage_util.dart';
 import 'package:flutter/material.dart';
-import 'package:ceylon_home_kitchen_mobile_app/screens/auth/signup_screen.dart';
-import 'package:ceylon_home_kitchen_mobile_app/screens/home_screen.dart';
-import 'package:ceylon_home_kitchen_mobile_app/widgets/circular_progress_indicator.dart';
+import 'package:food_mess_mobile_app/screens/auth/signup_screen.dart';
+import 'package:food_mess_mobile_app/screens/home_screen.dart';
+import 'package:food_mess_mobile_app/widgets/circular_progress_indicator.dart';
 
-import '../../api/auth_api.dart';
+import '../../api/user_api.dart';
 import '../../db/constants.dart';
+import '../../models/user_model.dart';
 import '../../util/navigation_util.dart';
 import '../../util/snackbar_util.dart';
 
@@ -21,14 +23,22 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
+  bool _isAdmin = false;
 
   Future<void> _handleLogin() async {
+
+    if(_isAdmin) {
+      // Navigate to Admin
+      if (mounted) {
+        NavigationUtil.pushReplacement(context, AdminHomeScreen());
+      }
+    }
+
     final mobile = _mobileController.text.trim();
     final password = _passwordController.text.trim();
 
     if (mobile.isEmpty || password.isEmpty) {
       SnackBarUtil.show(context, "Please enter mobile and password");
-
       return;
     }
 
@@ -39,28 +49,46 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       SnackBarUtil.show(context, "Logging in...");
 
-      final result = await AuthApi.login(mobile: mobile, password: password);
+      // 🔹 Swapped out AuthApi for your updated UserApi platform service
+      final result = await UserApi.login(mobile: mobile, password: password);
 
-      SnackBarUtil.show(context, result["message"]);
+      // Provide immediate visual feedback based on back-end return strings
+      SnackBarUtil.show(context, result["message"] ?? "Processing request");
 
-      if (result["success"] == true) {
-        // ✅ Save token & user info (SharedPreferences recommended)
-        print("✅ Token: ${result["token"]}");
-        print("👤 User: ${result["user"]}");
+      if (result["status"] == 'success') {
+        // Extract the data nested envelope object safely
+        final payload = result['data'] as Map<String, dynamic>;
 
-        StorageUtil.saveUser(result['user']);
-        StorageUtil.saveToken(result['token']);
+        final String token = payload["token"] ?? '';
+        final Map<String, dynamic> userData = payload["user"] ?? {};
+
+        // 🔹 1. Instantiate the user map layout into a structured Model Object
+        final UserModel userModel = UserModel.fromJson(userData);
+        currentUser = userModel;
+
+        print("✅ Token: $token");
+        print(
+          "👤 Model Object Configured: ${userModel.name} (ID: ${userModel.id})",
+        );
+
+        // 🔹 2. Save the structured model and token via your updated storage runner
+        await StorageUtil.saveUser(userModel);
+        await StorageUtil.saveToken(token);
 
         // Navigate to home screen
-        NavigationUtil.pushReplacement(context, HomeScreen());
+        if (mounted) {
+          NavigationUtil.pushReplacement(context, HomeScreen());
+        }
       }
     } catch (e) {
-      print("Error: $e");
+      print("Error during _handleLogin: $e");
       SnackBarUtil.show(context, 'Failed to connect to server');
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -71,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [primaryColor, primaryColorHover],
+            colors: [backgroundColor, backgroundColor2],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -92,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Welcome Back',
+                    _isAdmin ? 'Admin Login' : 'Welcome Back',
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -110,10 +138,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'Mobile Number',
                       prefixIcon: const Icon(
                         Icons.mobile_friendly_outlined,
-                        color: Colors.black87,
+                        color: Colors.white70,
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: backgroundColor2,
                       contentPadding: const EdgeInsets.symmetric(
                         vertical: 18,
                         horizontal: 16,
@@ -134,14 +162,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'Password',
                       prefixIcon: const Icon(
                         Icons.lock_outline_rounded,
-                        color: Colors.black87,
+                        color: Colors.white70,
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          color: Colors.black87,
+                          color: Colors.white70,
                         ),
                         onPressed: () {
                           setState(() {
@@ -150,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: backgroundColor2,
                       contentPadding: const EdgeInsets.symmetric(
                         vertical: 18,
                         horizontal: 16,
@@ -169,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.white,
+                        backgroundColor: primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
@@ -178,11 +206,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: _isLoading
                           ? SizedBox(width: 20, height: 20, child: Loader())
                           : Text(
-                              'Login',
+                              _isAdmin ? 'ADMIN LOGIN' : 'LOGIN',
                               style: TextStyle(
-                                fontSize: 18,
-                                color: primaryColor,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: backgroundColor2,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 2,
                               ),
                             ),
                     ),
@@ -196,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Text(
                         'don\'t have an account? ',
-                        style: const TextStyle(color: Colors.white70),
+                        style: const TextStyle(color: Colors.white54, fontSize: 13),
                       ),
                       SizedBox(width: 5),
                       GestureDetector(
@@ -208,10 +237,40 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                         child: Text(
-                          'Signup',
+                          'Request a Account',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
+                            fontSize: 13
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  // Admin Login
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _isAdmin ? 'Are You an Customer? ' : 'Are you a Admin? ',
+                        style: const TextStyle(color: Colors.white54, fontSize: 13),
+                      ),
+                      SizedBox(width: 5),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isAdmin = !_isAdmin;
+                          });
+                        },
+                        child: Text(
+                          _isAdmin ? 'Login As Customer' : 'Login As Admin',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13
                           ),
                         ),
                       ),

@@ -1,4 +1,4 @@
-import 'package:ceylon_home_kitchen_mobile_app/db/constants.dart';
+import 'package:food_mess_mobile_app/db/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/meal_model.dart';

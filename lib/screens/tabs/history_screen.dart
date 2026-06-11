@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
 
+import '../../api/order_api.dart';
 import '../../db/constants.dart';
+import '../../models/order_model.dart';
+import '../../util/date_util.dart';
 import '../../widgets/home/recent_orders.dart';
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
+
+  @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  // 1. Declare a Future variable to hold the asynchronous network call state
+  late Future<List<OrderModel>> _ordersFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    // 2. Initialize the network call when the widget mounts.
+    // Replace "1" with your actual active logged-in User ID string (e.g., from your Auth State Provider)
+    _ordersFuture = CustomerOrderApi.fetchCustomerOrders("1");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +40,46 @@ class HistoryScreen extends StatelessWidget {
           const SizedBox(height: 8),
 
           // Use Expanded if this is inside a Column for the whole screen
-          ListView(
-            shrinkWrap: true, // Use this if inside another scrollable
-            physics: const NeverScrollableScrollPhysics(),
-            children: [
-              _buildHistoryItem("20 April", "Lunch", "Rice",6, 1),
-              _buildHistoryItem("20 April", "Breakfast", "Rice (Red)",6.50, 1),
-              _buildHistoryItem("19 April", "Dinner","String Hoppers",12, 2),
-              _buildHistoryItem("19 April", "Lunch","Rice",6, 1),
-            ],
+          FutureBuilder(
+            future: _ordersFuture,
+            builder: (context, snapshot) {
+              // State A: Network request is in progress
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              // State B: Backend or parsing threw an Exception error
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    "Error: ${snapshot.error}",
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                );
+              }
+
+              // State C: Successful response but list contains zero records
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text("You haven't ordered any meals yet!"),
+                );
+              }
+
+              // State D: Success! Data is present. Extract it cleanly.
+              final orders = snapshot.data!;
+
+              // 4. Render the data inside a ListView
+              return ListView.builder(
+                shrinkWrap: true, // Use this if inside another scrollable
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: orders.length,
+                itemBuilder: (context, index) {
+                  final order = orders[index];
+
+                  return _buildHistoryItem(DateUtilsHelper.formatDate(order.mealDate), order.mealTime, order.mealName, order.unitPrice, order.qty);
+                },
+              );
+            }
           ),
         ],
         ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ceylon_home_kitchen_mobile_app/db/constants.dart';
+import 'package:food_mess_mobile_app/db/constants.dart';
 
 class NotificationScreen extends StatelessWidget {
   NotificationScreen({super.key});

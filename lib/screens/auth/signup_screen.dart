@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ceylon_home_kitchen_mobile_app/screens/auth/login_screen.dart';
-import 'package:ceylon_home_kitchen_mobile_app/widgets/circular_progress_indicator.dart';
+import 'package:food_mess_mobile_app/api/user_api.dart';
+import 'package:food_mess_mobile_app/screens/auth/login_screen.dart';
+import 'package:food_mess_mobile_app/widgets/circular_progress_indicator.dart';
 
-import '../../api/auth_api.dart';
 import '../../db/constants.dart';
 import '../../util/navigation_util.dart';
 
@@ -55,7 +55,7 @@ class _SignupScreenState extends State<SignupScreen> {
         context,
       ).showSnackBar(const SnackBar(content: Text("Registering...")));
 
-      final result = await AuthApi.register(
+      final result = await UserApi.register(
         name: name,
         mobile: mobile,
         password: password,
@@ -88,7 +88,7 @@ class _SignupScreenState extends State<SignupScreen> {
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [primaryColor, primaryColorHover],
+            colors: [primaryColor, primaryColor],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -103,12 +103,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Logo
-                  Image.asset("assets/logo-white.png", width: 200),
-                  const SizedBox(height: 30),
+                  Image.asset("assets/logo-white.png", width: 150),
                   Text(
                     'Lets get started!',
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: 17,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -122,10 +121,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       hintText: 'First Name',
                       prefixIcon: const Icon(
                         Icons.person_2_outlined,
-                        color: Colors.black87,
+                        color: Colors.white70,
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: backgroundColor2,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
@@ -146,10 +145,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       hintText: 'Mobile Number',
                       prefixIcon: const Icon(
                         Icons.phone_android_outlined,
-                        color: Colors.black87,
+                        color: Colors.white70,
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: backgroundColor2,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
@@ -168,13 +167,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       hintText: 'Password',
-                      prefixIcon: const Icon(Icons.lock, color: Colors.black87),
+                      prefixIcon: const Icon(Icons.lock, color: Colors.white70),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          color: Colors.black87,
+                          color: Colors.white70,
                         ),
                         onPressed: () {
                           setState(() {
@@ -183,7 +182,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         },
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: backgroundColor2,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
@@ -202,13 +201,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     obscureText: _obscureConfirmPassword,
                     decoration: InputDecoration(
                       hintText: 'Confirm Password',
-                      prefixIcon: const Icon(Icons.lock_outline),
+                      prefixIcon: const Icon(Icons.lock_outline, color: Colors.white70),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscureConfirmPassword
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          color: Colors.black87,
+                          color: Colors.white70,
                         ),
                         onPressed: () {
                           setState(() {
@@ -217,7 +216,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         },
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: backgroundColor2,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
@@ -245,11 +244,12 @@ class _SignupScreenState extends State<SignupScreen> {
                       child: _isLoading
                           ? SizedBox(width: 20, height: 20, child: Loader())
                           : Text(
-                              'Signup',
+                              'SIGNUP',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 15,
                                 color: primaryColor,
                                 fontWeight: FontWeight.bold,
+                                letterSpacing: 2
                               ),
                             ),
                     ),

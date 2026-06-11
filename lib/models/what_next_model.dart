@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 class WhatNextModel {
-  final int id;
-  final String mealDate; // YYYY-MM-DD format representation
+  final String id;
+  final DateTime mealDate; // YYYY-MM-DD format representation
   final String mealTime; // Breakfast, Lunch, or Dinner
   final List<String> curries; // Parsed out from database comma-separated text lines
 
@@ -22,8 +22,8 @@ class WhatNextModel {
         : [];
 
     return WhatNextModel(
-      id: json['id'] as int,
-      mealDate: json['meal_date'] as String,
+      id: json['id'] as String,
+      mealDate: DateTime.parse(json['meal_date'] as String),
       mealTime: json['meal_time'] as String,
       curries: curriesList,
     );

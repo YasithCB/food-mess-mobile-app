@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../models/user_model.dart';
+
 final Color primaryColor = const Color(0XFFB2D22A);
 final Color secondaryColor = const Color(0xFFDFF270);
 final Color primaryColor2 = const Color(0xFFCC9001);
@@ -29,7 +31,8 @@ const String baseUrl = "http://localhost:5000/api";
 // 🔹 Android emulator
 // For real device → use your PC IP (eg: http://192.168.1.5:5000/api)
 
-Map<String, dynamic> currentUser = {};
+UserModel? currentUser;
+// UserModel? currentUser = UserModel(id: '1', name: 'Yasith', mobile: '0557587705');
 String currentUserToken = '';
 
 // COMPANY DATA

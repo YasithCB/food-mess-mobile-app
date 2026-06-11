@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ceylon_home_kitchen_mobile_app/screens/sub_service_details_screen.dart';
+import 'package:food_mess_mobile_app/screens/sub_service_details_screen.dart';
 
 import '../models/service_model.dart';
 import '../util/navigation_util.dart';

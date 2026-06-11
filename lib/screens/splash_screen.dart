@@ -1,8 +1,8 @@
-import 'package:ceylon_home_kitchen_mobile_app/screens/auth/login_screen.dart';
+import 'package:food_mess_mobile_app/screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:ceylon_home_kitchen_mobile_app/db/constants.dart';
-import 'package:ceylon_home_kitchen_mobile_app/util/navigation_util.dart';
-import 'package:ceylon_home_kitchen_mobile_app/util/storage_util.dart';
+import 'package:food_mess_mobile_app/db/constants.dart';
+import 'package:food_mess_mobile_app/util/navigation_util.dart';
+import 'package:food_mess_mobile_app/util/storage_util.dart';
 
 import 'home_screen.dart';
 
@@ -34,14 +34,14 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _checkUserData() async {
-    currentUser = await StorageUtil.getUser() ?? {};
+    // currentUser = await StorageUtil.getUser();
 
     print('::::::::::::::::::: USER :::::::::::::::::::');
     print(currentUser);
 
     await Future.delayed(const Duration(seconds: 2)); // splash delay
 
-    if(currentUser == {}) {
+    if(currentUser == null) {
       NavigationUtil.pushReplacement(context, LoginScreen());
     }else {
       NavigationUtil.pushReplacement(context, HomeScreen());

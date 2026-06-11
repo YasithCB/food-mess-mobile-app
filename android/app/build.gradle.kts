@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.bit512.ceylon_home_kitchen_mobile_app"
+    namespace = "com.bit512.food_mess_mobile_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.bit512.ceylon_home_kitchen_mobile_app"
+        applicationId = "com.bit512.food_mess_mobile_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

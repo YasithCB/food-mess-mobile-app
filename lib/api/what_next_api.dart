@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../db/constants.dart';
 import '../models/what_next_model.dart';
-
-const String baseUrl = "https://yourapi.com"; // Adjust to your backend destination base URL
 
 /* =========================================================
    FETCH THE ACTIVE SLIDING TIMELINE WINDOW

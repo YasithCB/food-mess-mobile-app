@@ -1,4 +1,4 @@
-# ceylon_home_kitchen_mobile_app
+# food_mess_mobile_app
 
 A new Flutter project.
 

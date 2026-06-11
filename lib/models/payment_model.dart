@@ -5,6 +5,8 @@ class PaymentModel {
   final String userId;        // Links to your user identifier schema
   final String paymentMethod; // e.g., 'Cash on Delivery', 'Bank Transfer', 'Card Online'
   final double amount;        // Currency field mapped cleanly as a double
+  // Inside your PaymentModel class:
+  final double outstandingBalance;
   final String? paymentDate;  // Populated directly via database timestamps
 
   PaymentModel({
@@ -12,6 +14,7 @@ class PaymentModel {
     required this.userId,
     required this.paymentMethod,
     required this.amount,
+    required this.outstandingBalance,
     this.paymentDate,
   });
 
@@ -22,6 +25,8 @@ class PaymentModel {
       userId: json['user_id'].toString(), // Safely handles either integer or string payloads
       paymentMethod: json['payment_method'] as String,
       amount: double.parse(json['amount'].toString()),
+      // Inside your factory constructor fromJson:
+      outstandingBalance: double.parse(json['outstanding_balance'].toString()),
       paymentDate: json['payment_date'] as String?,
     );
   }

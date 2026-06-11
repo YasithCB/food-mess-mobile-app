@@ -1,25 +1,34 @@
-import 'package:ceylon_home_kitchen_mobile_app/db/constants.dart';
-import 'package:ceylon_home_kitchen_mobile_app/util/currency_util.dart';
-import 'package:ceylon_home_kitchen_mobile_app/util/date_util.dart';
+import 'package:food_mess_mobile_app/db/constants.dart';
+import 'package:food_mess_mobile_app/util/currency_util.dart';
+import 'package:food_mess_mobile_app/util/date_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/payment_model.dart';
+import '../../api/payment_api.dart';
 import '../../widgets/home/summary_card.dart';
 
-class PaymentScreen extends StatelessWidget {
+class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
 
   @override
+  State<PaymentScreen> createState() => _PaymentScreenState();
+}
+
+class _PaymentScreenState extends State<PaymentScreen> {
+  // Asynchronous tracker variable for your database data stream
+  late Future<List<PaymentModel>> _paymentsFuture;
+  final String currentUserId = "1"; // Replace with your login session provider variable later
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch data once when widget mounts to prevent infinite server hitting loops
+    _paymentsFuture = fetchCustomerPayments(currentUserId);
+  }
+
+  @override
   Widget build(BuildContext context) {
-
-    final List<Map<String, dynamic>> samplePayments = [
-      {"date": DateTime.now(), "method": "Credit Card", "amount": 145.50, "bal": 100.50},
-      {"date": DateTime.now().subtract(const Duration(days: 1)), "method": "Apple Pay", "amount": 82.00, "bal": 0.00},
-      {"date": DateTime.now().subtract(const Duration(days: 2)), "method": "Cash on Delivery", "amount": 210.25, "bal": 15.00},
-      {"date": DateTime.now().subtract(const Duration(days: 3)), "method": "Google Pay", "amount": 55.00, "bal": -25.00},
-      {"date": DateTime.now().subtract(const Duration(days: 5)), "method": "Online Banking", "amount": 320.75, "bal": -50.50},
-    ];
-
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -37,70 +46,87 @@ class PaymentScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 24.0),
               child: MonthlySummaryCard(
-                totalMeals: 42,
-                totalAmount: 630.00,
-                amountPaid: 450.00,
-                onPayTap: () {},
+                onPayTap: () {}, userId: currentUserId,
               ),
             ),
 
-            true ?
-            Column(
-              children: [
-                Align(
-                  alignment: AlignmentGeometry.centerLeft,
-                  child: Text(
-                    'Payments History'.toUpperCase(),
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 1.2),
-                  ),
-                ),
-                const SizedBox(height: 12),
+            // 🔹 Dynamic Data Stream Integration Container
+            FutureBuilder<List<PaymentModel>>(
+              future: _paymentsFuture,
+              builder: (context, snapshot) {
+                // Return an empty box while waiting or on failure to strictly protect original UI dimensions
+                if (snapshot.connectionState == ConnectionState.waiting || snapshot.hasError) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-                // Use Expanded if this is inside a Column for the whole screen
-                ListView.builder(
-                  shrinkWrap: true, // Use this if inside a Column
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: samplePayments.length,
-                  itemBuilder: (context, index) {
-                    final item = samplePayments[index];
-                    return _buildHistoryItem(
-                      item['date'],
-                      item['method'],
-                      item['amount'],
-                      item['bal'],
-                    );
-                  },
+                final paymentsList = snapshot.data ?? [];
+                final bool hasPayments = paymentsList.isNotEmpty;
+
+                return hasPayments ?
+                Column(
+                  children: [
+                    Align(
+                      alignment: AlignmentGeometry.centerLeft,
+                      child: Text(
+                        'Payments History'.toUpperCase(),
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 1.2),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Use Expanded if this is inside a Column for the whole screen
+                    ListView.builder(
+                      shrinkWrap: true, // Use this if inside a Column
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: paymentsList.length,
+                      itemBuilder: (context, index) {
+                        final item = paymentsList[index];
+
+                        // Clean fallback parsing for dates
+                        final DateTime paymentDate = item.paymentDate != null
+                            ? DateTime.tryParse(item.paymentDate!) ?? DateTime.now()
+                            : DateTime.now();
+
+                        return _buildHistoryItem(
+                          paymentDate,
+                          item.paymentMethod,
+                          item.amount,
+                          item.outstandingBalance
+                        );
+                      },
+                    )
+                  ],
                 )
-              ],
-            )
-            :
-            Column(
-              children: [
-                // 🎯 Modern Icon
-                Icon(
-                  Icons.payments_outlined,
-                  size: 50,
-                  color: primaryColor,
-                ),
-                const SizedBox(height: 8),
+                    :
+                Column(
+                  children: [
+                    // 🎯 Modern Icon
+                    Icon(
+                      Icons.payments_outlined,
+                      size: 50,
+                      color: primaryColor,
+                    ),
+                    const SizedBox(height: 8),
 
-                Text(
-                  'No Payments Yet',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: secondaryColor,
-                  ),
-                ),
+                    Text(
+                      'No Payments Yet',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: secondaryColor,
+                      ),
+                    ),
 
-                const SizedBox(height: 4),
+                    const SizedBox(height: 4),
 
-                // 📝 Subtitle
-                Text(
-                  'Your payment history will appear here once you complete a payment.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: Colors.white54),
-                ),
-              ],
+                    // 📝 Subtitle
+                    Text(
+                      'Your payment history will appear here once you complete a payment.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14, color: Colors.white54),
+                    ),
+                  ],
+                );
+              },
             )
           ],
         ),

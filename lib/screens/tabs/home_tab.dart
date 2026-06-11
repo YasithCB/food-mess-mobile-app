@@ -1,12 +1,12 @@
-import 'package:ceylon_home_kitchen_mobile_app/app.dart';
-import 'package:ceylon_home_kitchen_mobile_app/screens/tabs/menu_screen.dart';
-import 'package:ceylon_home_kitchen_mobile_app/widgets/home/order_meal_slider.dart';
-import 'package:ceylon_home_kitchen_mobile_app/widgets/home/recent_orders.dart';
-import 'package:ceylon_home_kitchen_mobile_app/widgets/home/today_tomorrow_special.dart';
+import 'package:food_mess_mobile_app/app.dart';
+import 'package:food_mess_mobile_app/screens/tabs/menu_screen.dart';
+import 'package:food_mess_mobile_app/widgets/home/order_meal_slider.dart';
+import 'package:food_mess_mobile_app/widgets/home/recent_orders.dart';
+import 'package:food_mess_mobile_app/widgets/home/today_tomorrow_special.dart';
 import 'package:flutter/material.dart';
-import 'package:ceylon_home_kitchen_mobile_app/db/constants.dart';
-import 'package:ceylon_home_kitchen_mobile_app/screens/notification_screen.dart';
-import 'package:ceylon_home_kitchen_mobile_app/util/navigation_util.dart';
+import 'package:food_mess_mobile_app/db/constants.dart';
+import 'package:food_mess_mobile_app/screens/notification_screen.dart';
+import 'package:food_mess_mobile_app/util/navigation_util.dart';
 
 import '../../util/date_util.dart';
 import '../../widgets/home/horizontal-image-slider.dart';
@@ -61,14 +61,14 @@ class _HomeTabState extends State<HomeTab> {
                               const CircleAvatar(
                                 radius: 24,
                                 backgroundColor: Colors.white24,
-                                backgroundImage: AssetImage("assets/images/avatar-girl.png"),
+                                backgroundImage: AssetImage("assets/images/avatar.png"),
                               ),
                               const SizedBox(width: 12),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Hello, ${currentUser['name'] ?? 'Guest'}",
+                                    "Hello, ${currentUser != null? currentUser!.name : 'Guest'}",
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -104,10 +104,7 @@ class _HomeTabState extends State<HomeTab> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 24.0),
                       child: MonthlySummaryCard(
-                        totalMeals: 42,
-                        totalAmount: 630.00,
-                        amountPaid: 450.00,
-                        onPayTap: () {},
+                        onPayTap: () {}, userId: '1',
                       ),
                     ),
                   ],

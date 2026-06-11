@@ -1,5 +1,5 @@
-import 'package:ceylon_home_kitchen_mobile_app/db/constants.dart';
-import 'package:ceylon_home_kitchen_mobile_app/util/date_util.dart';
+import 'package:food_mess_mobile_app/db/constants.dart';
+import 'package:food_mess_mobile_app/util/date_util.dart';
 import 'package:flutter/material.dart';
 
 import '../../api/order_api.dart';
@@ -21,7 +21,7 @@ class _RecentOrdersState extends State<RecentOrders> {
     super.initState();
     // 2. Initialize the network call when the widget mounts.
     // Replace "1" with your actual active logged-in User ID string (e.g., from your Auth State Provider)
-    _ordersFuture = fetchCustomerOrders("1");
+    _ordersFuture = CustomerOrderApi.fetchCustomerOrders("1");
   }
 
   @override
