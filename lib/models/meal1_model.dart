@@ -3,6 +3,7 @@ import 'dart:convert';
 class MealModel1 {
   final String id;
   final String mealTime;
+  final DateTime mealDate;
   final String name;
   final double price;
   final String? imageUrl;
@@ -11,6 +12,7 @@ class MealModel1 {
   MealModel1({
     required this.id,
     required this.mealTime,
+    required this.mealDate,
     required this.name,
     required this.price,
     this.imageUrl,
@@ -22,6 +24,7 @@ class MealModel1 {
     return MealModel1(
       id: json['id'] as String,
       mealTime: json['meal_time'] as String,
+      mealDate: DateTime.parse(json['meal_date'] as String),
       name: json['name'] as String,
       // Safely parse double string types coming from the backend decimals
       price: double.parse(json['price'].toString()),
@@ -35,6 +38,7 @@ class MealModel1 {
     return {
       'id': id,
       'meal_time': mealTime,
+      'meal_date': mealDate,
       'name': name,
       'price': price.toStringAsFixed(2),
       'image_url': imageUrl,

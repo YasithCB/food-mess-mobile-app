@@ -232,16 +232,16 @@ class _OrdersScreenState extends State<OrdersScreen> {
             icon: Icon(Icons.more_vert_rounded, color: primaryColor),
             onSelected: (action) => _handleCrudAction(action, order),
             itemBuilder: (BuildContext context) => [
-              const PopupMenuItem(
-                value: "edit",
-                child: Row(
-                  children: [
-                    Icon(Icons.edit_outlined, color: Colors.lightGreen, size: 20),
-                    SizedBox(width: 10),
-                    Text("Edit Record",  style: TextStyle(color: Colors.lightGreen)),
-                  ],
-                ),
-              ),
+              // const PopupMenuItem(
+              //   value: "edit",
+              //   child: Row(
+              //     children: [
+              //       Icon(Icons.edit_outlined, color: Colors.lightGreen, size: 20),
+              //       SizedBox(width: 10),
+              //       Text("Edit Record",  style: TextStyle(color: Colors.lightGreen)),
+              //     ],
+              //   ),
+              // ),
               const PopupMenuItem(
                 value: "delete",
                 child: Row(

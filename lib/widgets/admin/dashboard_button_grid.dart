@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:food_mess_mobile_app/widgets/admin/order_screen.dart';
+import 'package:food_mess_mobile_app/screens/admin/next_meal_screen.dart';
+import 'package:food_mess_mobile_app/screens/admin/order_screen.dart';
 
 import '../../db/constants.dart';
 
@@ -41,8 +42,12 @@ class DashboardButtonGrid extends StatelessWidget {
                   label: "Next Meal",
                   subtitle: "Upcoming prep schedule",
                   isFullWidth: false,
-                  onTap: () => print("Navigate to Next Meal"),
-                ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const NextMealScreen()),
+                    );
+                  },                 ),
               ),
               const SizedBox(width: 16),
               Expanded(

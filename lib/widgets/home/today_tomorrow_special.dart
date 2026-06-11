@@ -20,7 +20,7 @@ class _TodayTomorrowSpecialState extends State<TodayTomorrowSpecial> {
   void initState() {
     super.initState();
     // Cache the asynchronous timeline window fetch exactly once on widget mount
-    _timelineFuture = fetchTimelineWindow();
+    _timelineFuture = WhatNextApi.fetchTimelineWindow();
   }
 
   @override

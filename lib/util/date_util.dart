@@ -37,4 +37,24 @@ class DateUtilsHelper {
     // dd: Day, MMM: Short Month Name, yyyy: Year
     return DateFormat('dd MMM yyyy').format(date);
   }
+
+  /// Converts a DateTime object into a full day name (e.g., "Wednesday")
+  static String getDayName(DateTime date) {
+    return DateFormat('EEEE').format(date);
+  }
+
+  static String getRelativeDay(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(const Duration(days: 1));
+    final targetDate = DateTime(date.year, date.month, date.day);
+
+    if (targetDate == today) {
+      return "Today";
+    } else if (targetDate == tomorrow) {
+      return "Tomorrow";
+    } else {
+      return '';
+    }
+  }
 }
