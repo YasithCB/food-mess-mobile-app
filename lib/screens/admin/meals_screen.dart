@@ -43,8 +43,6 @@ class _MealsScreenState extends State<MealsScreen> {
             child: FutureBuilder<List<MealModel1>>(
               future: _mealsFuture,
               builder: (context, snapshot) {
-                print('snapshot.data');
-                print(snapshot.data);
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }

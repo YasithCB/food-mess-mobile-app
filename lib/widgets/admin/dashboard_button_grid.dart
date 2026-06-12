@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_mess_mobile_app/screens/admin/meals_screen.dart';
 import 'package:food_mess_mobile_app/screens/admin/next_meal_screen.dart';
 import 'package:food_mess_mobile_app/screens/admin/order_screen.dart';
+import 'package:food_mess_mobile_app/screens/admin/users_screen.dart';
 
 import '../../db/constants.dart';
 
@@ -69,7 +70,8 @@ class DashboardButtonGrid extends StatelessWidget {
                         builder: (context) => const MealsScreen(),
                       ),
                     );
-                  },                ),
+                  },
+                ),
               ),
             ],
           ),
@@ -87,7 +89,14 @@ class DashboardButtonGrid extends StatelessWidget {
                   label: "Users",
                   subtitle: "Client profiles & accounts",
                   isFullWidth: false,
-                  onTap: () => print("Navigate to Users"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UsersScreen(),
+                      ),
+                    );
+                  },
                 ),
               ),
               const SizedBox(width: 16),

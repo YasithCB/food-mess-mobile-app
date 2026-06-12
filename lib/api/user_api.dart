@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../db/constants.dart';
+import '../models/user_model.dart';
 import '../util/logger_util.dart';
 
 class UserApi {
@@ -89,50 +90,81 @@ class UserApi {
     }
   }
 
-  /// 🔹 Update account name or mobile attributes
-  static Future<Map<String, dynamic>> updateUserProfile({
-    required String userId,
-    required String name,
-    required String mobile,
-  }) async {
-    final String url = "$baseUrl/users/$userId";
-    final Map<String, dynamic> requestBody = {
-      "name": name,
-      "mobile": mobile,
-    };
-
+  /// CREATE User (POST)
+  static Future<bool> createUser(Map<String, dynamic> payload) async {
+    final String url = "$baseUrl/users";
     try {
-      LoggerUtil.logRequest(method: "PUT", url: url, body: requestBody);
-
-      final response = await http.put(
+      LoggerUtil.logRequest(method: "POST", url: url);
+      final response = await http.post(
         Uri.parse(url),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode(requestBody),
+        body: jsonEncode(payload),
       );
 
-      return _handleResponse(response);
+      LoggerUtil.logResponse(url: url, statusCode: response.statusCode, body: response.body);
+      final Map<String, dynamic> result = jsonDecode(response.body);
+      return result['status'] == 'success';
     } catch (e) {
-      LoggerUtil.logError(method: "PUT", url: url, error: e.toString());
-      return {"success": false, "message": "Connection error: $e"};
+      LoggerUtil.logError(method: "POST", url: url, error: e.toString());
+      return false;
     }
   }
 
-  /// 🔹 Delete account data ledger completely
-  static Future<Map<String, dynamic>> deleteUserAccount(String userId) async {
+  /// UPDATE User (PUT)
+  static Future<bool> updateUser(String userId, Map<String, dynamic> payload) async {
+    final String url = "$baseUrl/users/$userId";
+    try {
+      LoggerUtil.logRequest(method: "PUT", url: url);
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(payload),
+      );
+
+      LoggerUtil.logResponse(url: url, statusCode: response.statusCode, body: response.body);
+      final Map<String, dynamic> result = jsonDecode(response.body);
+      return result['status'] == 'success';
+    } catch (e) {
+      LoggerUtil.logError(method: "PUT", url: url, error: e.toString());
+      return false;
+    }
+  }
+
+  static Future<List<UserModel>> fetchAllUsers() async {
+    final String url = "$baseUrl/users";
+
+    try {
+      LoggerUtil.logRequest(method: "GET", url: url);
+      final response = await http.get(Uri.parse(url));
+
+      LoggerUtil.logResponse(url: url, statusCode: response.statusCode, body: response.body);
+
+      final Map<String, dynamic> result = jsonDecode(response.body);
+
+      if (result['status'] == 'success') {
+        return (result['data'] as List).map((u) => UserModel.fromJson(u)).toList();
+      }
+      return [];
+    } catch (e) {
+      LoggerUtil.logError(method: "GET", url: url, error: e.toString());
+      return [];
+    }
+  }
+
+  static Future<bool> deleteUser(String userId) async {
     final String url = "$baseUrl/users/$userId";
 
     try {
       LoggerUtil.logRequest(method: "DELETE", url: url);
+      final response = await http.delete(Uri.parse(url));
 
-      final response = await http.delete(
-        Uri.parse(url),
-        headers: {"Content-Type": "application/json"},
-      );
+      LoggerUtil.logResponse(url: url, statusCode: response.statusCode, body: response.body);
 
-      return _handleResponse(response);
+      final Map<String, dynamic> result = jsonDecode(response.body);
+      return result['status'] == 'success';
     } catch (e) {
       LoggerUtil.logError(method: "DELETE", url: url, error: e.toString());
-      return {"success": false, "message": "Connection error: $e"};
+      return false;
     }
   }
 
