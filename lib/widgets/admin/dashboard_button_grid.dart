@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_mess_mobile_app/screens/admin/meals_screen.dart';
 import 'package:food_mess_mobile_app/screens/admin/next_meal_screen.dart';
 import 'package:food_mess_mobile_app/screens/admin/order_screen.dart';
 
@@ -27,7 +28,8 @@ class DashboardButtonGrid extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => const OrdersScreen()),
               );
-            },          ),
+            },
+          ),
           const SizedBox(height: 16),
 
           /* ==========================================
@@ -45,9 +47,12 @@ class DashboardButtonGrid extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const NextMealScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const NextMealScreen(),
+                      ),
                     );
-                  },                 ),
+                  },
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -57,8 +62,14 @@ class DashboardButtonGrid extends StatelessWidget {
                   label: "Meals",
                   subtitle: "Edit recipe directory",
                   isFullWidth: false,
-                  onTap: () => print("Navigate to Meals"),
-                ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MealsScreen(),
+                      ),
+                    );
+                  },                ),
               ),
             ],
           ),
@@ -125,10 +136,14 @@ class DashboardButtonGrid extends StatelessWidget {
               offset: const Offset(0, 4),
             ),
           ],
-          border: Border.all(color: Colors.grey.withAlpha((0.15 * 255).toInt())),
+          border: Border.all(
+            color: Colors.grey.withAlpha((0.15 * 255).toInt()),
+          ),
         ),
         child: Row(
-          mainAxisAlignment: isFullWidth ? MainAxisAlignment.start : MainAxisAlignment.center,
+          mainAxisAlignment: isFullWidth
+              ? MainAxisAlignment.start
+              : MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Icon Ring Container

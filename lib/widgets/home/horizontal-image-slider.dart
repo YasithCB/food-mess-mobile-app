@@ -19,7 +19,7 @@ class _HorizontalImageGridState extends State<HorizontalImageGrid> {
   void initState() {
     super.initState();
     // Initialize the network call exactly once when the widget mounts
-    _mealsFuture = fetchMeals();
+    _mealsFuture = MealApi.fetchAllMeals();
   }
 
   @override

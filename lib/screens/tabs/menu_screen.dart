@@ -1,4 +1,5 @@
-import 'package:food_mess_mobile_app/db/db.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../../api/meal_api.dart';
@@ -20,7 +21,7 @@ class _MenuScreenState extends State<MenuScreen> {
   void initState() {
     super.initState();
     // Initialize the network call exactly once when the widget mounts
-    _mealsFuture = fetchMeals();
+    _mealsFuture = MealApi.fetchAllMeals();
   }
 
   @override
